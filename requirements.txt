@@ -1,0 +1,6 @@
+pinecone
+sentence-transformers
+pandas
+pyarrow
+mpmath
+urllib3
