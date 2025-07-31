@@ -19,5 +19,6 @@
   "metadata_field_to_namespace_from": "category",
   "iterate_over_namespaces": true,
   "use_source_as_target_namespace": true,
-  "create_target": true
+  "delta_delay_between_runs": false,
+  "delta_delay_duration": 600
 }

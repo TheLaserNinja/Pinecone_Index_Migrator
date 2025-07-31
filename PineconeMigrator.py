@@ -45,6 +45,8 @@ NAMESPACE_FROM_METADATA_FIELD = config.get("namespace_from_metadata_field")
 METADATA_FIELD_TO_NAMESPACE_FROM = config.get("metadata_field_to_namespace_from")
 ITERATE_OVER_NAMESPACES = config.get("iterate_over_namespaces")
 USE_SOURCE_AS_TARGET_NAMESPACE = config.get("use_source_as_target_namespace")
+DELTA_DELAY_BETWEEN_RUNS = config.get("delta_delay_between_runs")
+DELTA_DELAY_DURATION = config.get("delta_delay_duration")
 
 # --- Logging Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -620,6 +622,8 @@ if __name__ == "__main__":
             #create a new index if the target index does not exist.
             if CREATE_TARGET:
                 ensure_target_index(pc=pc, target_index_name=TARGET_INDEX_NAME, dimensions=dimensions)
+
+            #this will throw an error if autocreate is not enabled. I'm OK with this.
             target_index = pc.Index(TARGET_INDEX_NAME)
 
             if vector_count == 0:
@@ -646,6 +650,11 @@ if __name__ == "__main__":
                     if stop_event.is_set():
                         runloop = False
                         break
+
+                    #delay between runs if left in DELTA mode
+                    if DELTA_DELAY_BETWEEN_RUNS:
+                        logging.info(f"Delaying between runs: {DELTA_DELAY_BETWEEN_RUNS}")
+                        time.sleep(DELTA_DELAY_DURATION)
 
 listener_thread.join()
 print("Graceful shutdown complete.")
